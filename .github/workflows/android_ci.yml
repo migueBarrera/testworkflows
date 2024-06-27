@@ -38,6 +38,9 @@ jobs:
     #   - name: Change to project directory
     #     run: cd TestApp
 
+      - name: Change to project directory
+        run: ls
+
       - name: Build Release apk
         # env:
         #   RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
