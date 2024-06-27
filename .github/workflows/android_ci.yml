@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-2022
 
     steps:
       - name: Checking out branch
@@ -35,15 +35,15 @@ jobs:
     #       echo $ENCODED_STRING > keystore-b64.txt
     #       base64 -d keystore-b64.txt > keystore.jks
 
-      - name: Change to project directory
-        run: cd TestApp
+    #   - name: Change to project directory
+    #     run: cd TestApp
 
       - name: Build Release apk
         # env:
         #   RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
         #   RELEASE_KEYSTORE_ALIAS: ${{ secrets.RELEASE_KEYSTORE_ALIAS }}
         #   RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
-        run: gradlew assembleRelease bundleRelease --stacktrace
+        run: ./TestApp/gradlew assembleRelease bundleRelease --stacktrace
 
       - name: Get release file aab path
         id: releaseAab
