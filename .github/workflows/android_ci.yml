@@ -77,8 +77,14 @@ jobs:
 #          groups: ${{ github.event.inputs.testers }}
 #          file: ${{ steps.releaseApk.outputs.apkfile }}
 
+
+      - name: Find and upload APKs
+        run: |
+            APK_PATH=$(find . -type f -name "*.apk" | grep -m 1 "release")
+            echo "APK_PATH=$APK_PATH" >> $GITHUB_ENV
+
       - name: Upload Release Build to Artifacts
         uses: actions/upload-artifact@v4
         with:
-           name: release-artifacts
-           path: app/build/outputs/apk/debug/app-debug.apk
+            name: release-artifacts
+            path: ${{ env.APK_PATH }}
