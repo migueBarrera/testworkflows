@@ -82,7 +82,7 @@ jobs:
         run: |
             $apkPath = Get-ChildItem -Recurse -Filter *.apk | Where-Object { $_.Name -like "*release*" } | Select-Object -First 1 -ExpandProperty FullName
             echo "APK_PATH=$apkPath" >> $env:GITHUB_ENV
-            shell: pwsh
+        shell: pwsh
 
       - name: Upload Release Build to Artifacts
         uses: actions/upload-artifact@v4
