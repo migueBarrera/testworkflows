@@ -80,7 +80,7 @@ jobs:
 
       - name: Find and upload APKs
         run: |
-            $paths = Get-ChildItem -Recurse -Filter *.apk, *.aab | Where-Object { $_.Name -like "*release*" } | Select-Object -ExpandProperty FullName -Join "`n"
+            $paths = Get-ChildItem -Recurse -Include *.apk, *.aab | Where-Object { $_.Name -like "*release*" } | Select-Object -ExpandProperty FullName -Join "`n"
             echo "FILE_PATHS=$paths" >> $env:GITHUB_ENV
         shell: pwsh
 
