@@ -80,8 +80,9 @@ jobs:
 
       - name: Find and upload APKs
         run: |
-            APK_PATH=$(find . -type f -name "*.apk" | grep -m 1 "release")
-            echo "APK_PATH=$APK_PATH" >> $GITHUB_ENV
+            $apkPath = Get-ChildItem -Recurse -Filter *.apk | Where-Object { $_.Name -like "*release*" } | Select-Object -First 1 -ExpandProperty FullName
+            echo "APK_PATH=$apkPath" >> $env:GITHUB_ENV
+            shell: pwsh
 
       - name: Upload Release Build to Artifacts
         uses: actions/upload-artifact@v4
