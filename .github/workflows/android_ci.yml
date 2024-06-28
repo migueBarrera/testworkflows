@@ -80,8 +80,9 @@ jobs:
 
       - name: Find and upload APKs
         run: |
-            $paths = Get-ChildItem -Recurse -Include *.apk, *.aab | Where-Object { $_.Name -like "*release*" } | Select-Object -ExpandProperty FullName -Join "`n"
-            echo "FILE_PATHS=$paths" >> $env:GITHUB_ENV
+            $paths = Get-ChildItem -Recurse -Include *.apk, *.aab | Where-Object { $_.Name -like "*release*" } | Select-Object -ExpandProperty FullName
+            $joinedPaths = $paths -join "`n"
+            echo "FILE_PATHS=$joinedPaths" >> $env:GITHUB_ENV
         shell: pwsh
 
       - name: Upload Release Build to Artifacts
