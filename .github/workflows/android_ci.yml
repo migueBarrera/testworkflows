@@ -78,15 +78,27 @@ jobs:
 #          file: ${{ steps.releaseApk.outputs.apkfile }}
 
 
+
       - name: Find and upload APKs
         run: |
-            $paths = Get-ChildItem -Recurse -Include *.apk, *.aab | Where-Object { $_.Name -like "*release*" } | Select-Object -ExpandProperty FullName
-            $joinedPaths = $paths -join "`n"
-            echo "FILE_PATHS=$joinedPaths" >> $env:GITHUB_ENV
+            $apkPath = Get-ChildItem -Recurse -Filter *.apk | Where-Object { $_.Name -like "*release*" } | Select-Object -First 1 -ExpandProperty FullName
+            echo "APK_PATH=$apkPath" >> $env:GITHUB_ENV
         shell: pwsh
 
-      - name: Upload Release Build to Artifacts
+      - name: Upload Release APKs to Artifacts
         uses: actions/upload-artifact@v4
         with:
-            name: release-artifacts
-            path: ${{ env.FILE_PATHS }}
+          name: release-apks
+          path: ${{ env.APK_PATH }}
+
+      - name: Find and upload AABs
+        run: |
+            $aabPath = Get-ChildItem -Recurse -Filter *.aab | Where-Object { $_.Name -like "*release*" } | Select-Object -First 1 -ExpandProperty FullName
+            echo "AAB_PATH=$aabPath" >> $env:GITHUB_ENV
+        shell: pwsh
+
+      - name: Upload Release AABs to Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-aabs
+          path: ${{ env.AAB_PATH }}
