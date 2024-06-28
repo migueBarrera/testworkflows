@@ -45,7 +45,7 @@ jobs:
         #   RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
         #   RELEASE_KEYSTORE_ALIAS: ${{ secrets.RELEASE_KEYSTORE_ALIAS }}
         #   RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
-        run: ./gradlew assembleRelease --stacktrace
+        run: ./gradlew assembleRelease bundleRelease --stacktrace
 
     #   - name: Get release file aab path
     #     id: releaseAab
@@ -80,12 +80,12 @@ jobs:
 
       - name: Find and upload APKs
         run: |
-            $apkPath = Get-ChildItem -Recurse -Filter *.apk | Where-Object { $_.Name -like "*release*" } | Select-Object -First 1 -ExpandProperty FullName
-            echo "APK_PATH=$apkPath" >> $env:GITHUB_ENV
+            $apkPath = Get-ChildItem -Recurse -Filter *.apk, *.aab | Where-Object { $_.Name -like "*release*" } | Select-Object -ExpandProperty FullName -Join "`n"
+            echo "FILE_PATHS=$paths" >> $env:GITHUB_ENV
         shell: pwsh
 
       - name: Upload Release Build to Artifacts
         uses: actions/upload-artifact@v4
         with:
             name: release-artifacts
-            path: ${{ env.APK_PATH }}
+            path: ${{ env.FILE_PATHS }}
