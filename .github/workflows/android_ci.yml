@@ -39,7 +39,8 @@ jobs:
 
     #   - name: Change to project directory
     #     run: cd TestApp
-
+      - name: Change wrapper permissions
+        run: chmod +x ./gradlew
       - name: Build Release apk
         # env:
         #   RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
