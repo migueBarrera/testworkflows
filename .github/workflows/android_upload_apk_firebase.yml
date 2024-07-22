@@ -1,0 +1,49 @@
+name: Deploy APK to Firebase
+
+on:
+    workflow_call:
+      inputs:
+        proyect_id:
+          required: true
+          type: string
+        app_id:
+          required: true
+          type: string
+        apk_path:
+          required: true
+          type: string
+      secrets:
+        service_account_json_content:
+          required: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+    #   - name: Decode Firebase service account
+    #     id: firebaseServiceAccount
+    #     run: echo "${{ secrets.service_account_json_content }}" > google-application-credentials.json
+  
+      - name: Print GOOGLE_APPLICATION_CREDENTIALS_JSON to file
+        shell: bash
+        run: 'echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" > firebase.json'
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.service_account_json_content }}
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+    #   - name: Authenticate with Firebase
+    #     run: firebase auth:import $HOME/firebase-service-account.json --project "${{ inputs.proyect_id  }}" 
+    #     env:
+    #       GOOGLE_APPLICATION_CREDENTIALS: $HOME/firebase-service-account.json
+    
+      - name: Upload APK to Firebase App Distribution
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ./firebase.json
+        run: |
+          firebase appdistribution:distribute --debug app/build/outputs/apk/release/app-release.apk \
+            --app "${{ inputs.app_id  }}" 

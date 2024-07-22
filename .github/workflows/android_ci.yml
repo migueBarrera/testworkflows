@@ -46,7 +46,7 @@ jobs:
         #   RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
         #   RELEASE_KEYSTORE_ALIAS: ${{ secrets.RELEASE_KEYSTORE_ALIAS }}
         #   RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
-        run: ./gradlew assembleRelease bundleRelease --stacktrace
+        run: ./gradlew assembleRelease --stacktrace
 
       - name: Find and upload APKs
         run: |
@@ -60,15 +60,14 @@ jobs:
           name: release-apks
           path: ${{ env.APK_PATH }}
 
-      - name: Find and upload AABs
-        run: |
-            $aabPath = Get-ChildItem -Recurse -Filter *.aab | Where-Object { $_.Name -like "*release*" } | Select-Object -First 1 -ExpandProperty FullName
-            echo "AAB_PATH=$aabPath" >> $env:GITHUB_ENV
-        shell: pwsh
-
-      - name: Upload Release AABs to Artifacts
-        uses: actions/upload-artifact@v4
+      - name: firebase    
+        uses: ./.github/workflows/android_upload_apk_firebase.yml
         with:
-          name: release-aabs
-          path: ${{ env.AAB_PATH }}
+          proyect_id: 'net-maui-firebase-test'
+          app_id: 'com.mbmdevelop.mauifirebase'
+          apk_path: ${{ env.APK_PATH }}
+        secrets:
+            service_account_json_content: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}  
+
+
 
